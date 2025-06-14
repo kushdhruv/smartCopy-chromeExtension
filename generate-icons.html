@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate Icons</title>
+  <style>
+    canvas {
+      border: 1px solid #ccc;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvases"></div>
+  <script>
+    const sizes = [16, 48, 128];
+    const container = document.getElementById('canvases');
+
+    sizes.forEach(size => {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      container.appendChild(canvas);
+
+      const ctx = canvas.getContext('2d');
+      
+      // Draw background
+      ctx.fillStyle = '#4a90e2';
+      ctx.fillRect(0, 0, size, size);
+      
+      // Draw icon elements
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = Math.max(1, size / 16);
+      
+      const margin = size * 0.2;
+      const width = size - (margin * 2);
+      
+      // Draw rectangles
+      ctx.strokeRect(margin, margin, width, width);
+      
+      const innerMargin = margin + (size * 0.1);
+      const innerWidth = width - (size * 0.2);
+      ctx.strokeRect(innerMargin, innerMargin, innerWidth, innerWidth);
+      
+      // Draw lines
+      const lineStart = margin + (size * 0.1);
+      const lineEnd = size - margin - (size * 0.1);
+      const lineSpacing = width / 3;
+      
+      for (let i = 0; i < 3; i++) {
+        const y = margin + (lineSpacing * (i + 1));
+        ctx.beginPath();
+        ctx.moveTo(lineStart, y);
+        ctx.lineTo(lineEnd, y);
+        ctx.stroke();
+      }
+
+      // Add download link
+      const link = document.createElement('a');
+      link.download = `icon${size}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.textContent = `Download ${size}x${size} icon`;
+      link.style.display = 'block';
+      container.appendChild(link);
+    });
+  </script>
+</body>
+</html> 

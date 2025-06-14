@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smart Copy Pro - Options</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      color: #4a90e2;
+      margin-bottom: 30px;
+    }
+
+    .option-group {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    .option-item label {
+      margin-left: 10px;
+      flex-grow: 1;
+    }
+
+    .option-description {
+      color: #666;
+      font-size: 0.9em;
+      margin: 5px 0 15px 30px;
+    }
+
+    button {
+      background: #4a90e2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background: #357abd;
+    }
+
+    .status {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .status.success {
+      background: #4CAF50;
+      color: white;
+      display: block;
+    }
+
+    .status.error {
+      background: #f44336;
+      color: white;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>Smart Copy Pro Settings</h1>
+
+  <div class="option-group">
+    <h2>General Settings</h2>
+    <div class="option-item">
+      <input type="checkbox" id="enabled" checked>
+      <label for="enabled">Enable Smart Copy Pro</label>
+    </div>
+    <div class="option-description">
+      When enabled, text will be automatically copied when selected.
+    </div>
+  </div>
+
+  <div class="option-group">
+    <h2>Privacy Settings</h2>
+    <div class="option-item">
+      <input type="checkbox" id="privacyFilter" checked>
+      <label for="privacyFilter">Enable Privacy Filter</label>
+    </div>
+    <div class="option-description">
+      Prevents copying of sensitive information like passwords and credit card numbers.
+    </div>
+  </div>
+
+  <div class="option-group">
+    <h2>Advanced Features</h2>
+    <div class="option-item">
+      <input type="checkbox" id="autoPaste">
+      <label for="autoPaste">Enable Auto-paste Mode</label>
+    </div>
+    <div class="option-description">
+      Automatically offers to paste copied text to target applications.
+    </div>
+
+    <div class="option-item">
+      <input type="checkbox" id="aiFeatures">
+      <label for="aiFeatures">Enable AI Features</label>
+    </div>
+    <div class="option-description">
+      Provides translation and summarization of copied text.
+    </div>
+  </div>
+
+  <button id="save">Save Settings</button>
+  <div id="status" class="status"></div>
+
+  <script src="options.js"></script>
+</body>
+</html> 

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smart Copy Pro</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Smart Copy Pro</h1>
+      <div class="toggle-container">
+        <label class="switch">
+          <input type="checkbox" id="mainToggle">
+          <span class="slider round"></span>
+        </label>
+        <span>Auto-copy enabled</span>
+      </div>
+    </header>
+
+    <div class="features">
+      <div class="feature-item">
+        <label class="switch">
+          <input type="checkbox" id="privacyFilter">
+          <span class="slider round"></span>
+        </label>
+        <span>Privacy Filter</span>
+      </div>
+
+      <div class="feature-item">
+        <label class="switch">
+          <input type="checkbox" id="autoPaste">
+          <span class="slider round"></span>
+        </label>
+        <span>Auto-paste Mode</span>
+      </div>
+
+      <div class="feature-item">
+        <label class="switch">
+          <input type="checkbox" id="aiFeatures">
+          <span class="slider round"></span>
+        </label>
+        <span>AI Features</span>
+      </div>
+    </div>
+
+    <div class="clipboard-history">
+      <h2>Recent Copies</h2>
+      <div id="historyList" class="history-list">
+        <!-- History items will be inserted here -->
+      </div>
+    </div>
+
+    <div class="settings">
+      <button id="clearHistory">Clear History</button>
+      <button id="settings">Settings</button>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html> 
