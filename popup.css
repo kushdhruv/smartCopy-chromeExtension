@@ -8,41 +8,39 @@
 }
 
 body {
-  width: 350px;
+  width: 320px;
   margin: 0;
-  padding: 0;
+  padding: 16px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  color: var(--text-color);
+  background-color: #f5f5f5;
 }
 
 .container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 16px;
 }
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
 h1 {
+  margin: 0 0 16px 0;
   font-size: 20px;
-  margin: 0;
-  color: var(--primary-color);
+  color: #1a73e8;
+  text-align: center;
 }
 
 h2 {
+  margin: 16px 0 8px 0;
   font-size: 16px;
-  margin: 16px 0 8px;
+  color: #202124;
 }
 
 /* Toggle Switch */
 .switch {
   position: relative;
   display: inline-block;
-  width: 50px;
-  height: 24px;
+  width: 40px;
+  height: 20px;
 }
 
 .switch input {
@@ -60,6 +58,7 @@ h2 {
   bottom: 0;
   background-color: #ccc;
   transition: .4s;
+  border-radius: 20px;
 }
 
 .slider:before {
@@ -67,26 +66,19 @@ h2 {
   content: "";
   height: 16px;
   width: 16px;
-  left: 4px;
-  bottom: 4px;
+  left: 2px;
+  bottom: 2px;
   background-color: white;
   transition: .4s;
+  border-radius: 50%;
 }
 
 input:checked + .slider {
-  background-color: var(--primary-color);
+  background-color: #1a73e8;
 }
 
 input:checked + .slider:before {
-  transform: translateX(26px);
-}
-
-.slider.round {
-  border-radius: 24px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
+  transform: translateX(20px);
 }
 
 /* Features Section */
@@ -108,23 +100,32 @@ input:checked + .slider:before {
 }
 
 /* Clipboard History */
+.history-section {
+  margin-top: 16px;
+}
+
 .history-list {
   max-height: 200px;
   overflow-y: auto;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: white;
 }
 
 .history-item {
-  padding: 8px;
-  border-bottom: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+  color: #202124;
   cursor: pointer;
-  transition: background-color 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .history-item:hover {
-  background-color: var(--secondary-color);
+  background-color: #f8f9fa;
 }
 
 .history-item:last-child {
@@ -133,29 +134,79 @@ input:checked + .slider:before {
 
 /* Settings Buttons */
 .settings {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 16px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 16px;
 }
 
-button {
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.setting-item:last-child {
+  margin-bottom: 0;
+}
+
+.setting-item label {
+  color: #202124;
+  font-size: 14px;
+}
+
+/* AI Settings */
+.ai-settings {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.language-select {
+  width: 120px;
+  padding: 4px 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #202124;
+  background-color: white;
+}
+
+/* Button styles */
+.clear-button, .settings-button {
+  width: 100%;
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
-  background-color: var(--primary-color);
-  color: white;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
-button:hover {
-  background-color: #357abd;
+.clear-button {
+  background-color: #f8f9fa;
+  color: #202124;
+  margin-bottom: 8px;
 }
 
-#clearHistory {
-  background-color: var(--error-color);
+.clear-button:hover {
+  background-color: #e8eaed;
 }
 
-#clearHistory:hover {
-  background-color: #d32f2f;
+.settings-button {
+  background-color: #1a73e8;
+  color: white;
+}
+
+.settings-button:hover {
+  background-color: #1557b0;
+}
+
+/* Footer */
+.footer {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
 } 

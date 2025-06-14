@@ -114,43 +114,31 @@ try {
 loadHistory();
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize UI elements
-  const mainToggle = document.getElementById('mainToggle');
-  const privacyFilter = document.getElementById('privacyFilter');
-  const autoPaste = document.getElementById('autoPaste');
-  const aiFeatures = document.getElementById('aiFeatures');
-  const clearHistoryBtn = document.getElementById('clearHistory');
-  const settingsBtn = document.getElementById('settings');
-  const historyList = document.getElementById('historyList');
-  let port = null;
+  // Initialize UI elements with null checks
+  const elements = {
+    mainToggle: document.getElementById('enableToggle'),
+    privacyFilter: document.getElementById('privacyToggle'),
+    autoPaste: document.getElementById('autoPasteToggle'),
+    aiToggle: document.getElementById('aiToggle'),
+    aiSettings: document.getElementById('aiSettings'),
+    summarizeToggle: document.getElementById('summarizeToggle'),
+    translateToggle: document.getElementById('translateToggle'),
+    sentimentToggle: document.getElementById('sentimentToggle'),
+    languageSelect: document.getElementById('languageSelect'),
+    clearHistoryBtn: document.getElementById('clearHistory'),
+    settingsBtn: document.getElementById('settings'),
+    historyList: document.getElementById('historyList')
+  };
 
-  // Establish connection with background script
-  function connectToBackground() {
-    try {
-      port = chrome.runtime.connect({ name: 'popup' });
-      
-      port.onDisconnect.addListener(() => {
-        // console.log('Smart Copy Pro: Popup disconnected from background');
-        port = null;
-        // Try to reconnect after a delay
-        setTimeout(connectToBackground, 1000);
-      });
+  // Check if all required elements exist
+  const missingElements = Object.entries(elements)
+    .filter(([key, element]) => !element)
+    .map(([key]) => key);
 
-      // Listen for messages from background
-      port.onMessage.addListener((message) => {
-        if (message.type === 'historyUpdate') {
-          loadHistory();
-        }
-      });
-    } catch (error) {
-      // console.log('Smart Copy Pro: Failed to connect to background', error);
-      // Try to reconnect after a delay
-      setTimeout(connectToBackground, 1000);
-    }
+  if (missingElements.length > 0) {
+    console.error('Smart Copy Pro: Missing elements:', missingElements);
+    return;
   }
-
-  // Initial connection
-  connectToBackground();
 
   // Load saved settings
   chrome.storage.sync.get({
@@ -158,78 +146,218 @@ document.addEventListener('DOMContentLoaded', () => {
     privacyFilter: true,
     autoPaste: false,
     aiFeatures: false,
+    aiSettings: {
+      summarize: true,
+      translate: true,
+      sentiment: true
+    },
+    language: 'es',
     history: []
   }, (items) => {
-    mainToggle.checked = items.enabled;
-    privacyFilter.checked = items.privacyFilter;
-    autoPaste.checked = items.autoPaste;
-    aiFeatures.checked = items.aiFeatures;
-    updateHistoryList(items.history);
+    try {
+      // Set initial states
+      elements.mainToggle.checked = items.enabled;
+      elements.privacyFilter.checked = items.privacyFilter;
+      elements.autoPaste.checked = items.autoPaste;
+      elements.aiToggle.checked = items.aiFeatures;
+      elements.summarizeToggle.checked = items.aiSettings.summarize;
+      elements.translateToggle.checked = items.aiSettings.translate;
+      elements.sentimentToggle.checked = items.aiSettings.sentiment;
+      elements.languageSelect.value = items.language;
+      
+      // Show/hide AI settings based on AI toggle
+      elements.aiSettings.style.display = items.aiFeatures ? 'block' : 'none';
+      
+      // Update history list
+      updateHistoryList(items.history);
+    } catch (error) {
+      console.error('Smart Copy Pro: Error setting initial states:', error);
+    }
   });
 
   // Save settings when toggled
-  mainToggle.addEventListener('change', () => {
-    chrome.storage.sync.set({ enabled: mainToggle.checked });
+  elements.mainToggle.addEventListener('change', () => {
+    try {
+      chrome.storage.sync.set({ enabled: elements.mainToggle.checked });
+      elements.privacyFilter.disabled = !elements.mainToggle.checked;
+    } catch (error) {
+      console.error('Smart Copy Pro: Error saving main toggle state:', error);
+    }
   });
 
-  privacyFilter.addEventListener('change', () => {
-    chrome.storage.sync.set({ privacyFilter: privacyFilter.checked });
+  elements.privacyFilter.addEventListener('change', () => {
+    try {
+      chrome.storage.sync.set({ privacyFilter: elements.privacyFilter.checked });
+    } catch (error) {
+      console.error('Smart Copy Pro: Error saving privacy filter state:', error);
+    }
   });
 
-  autoPaste.addEventListener('change', () => {
-    chrome.storage.sync.set({ autoPaste: autoPaste.checked });
+  elements.autoPaste.addEventListener('change', () => {
+    try {
+      chrome.storage.sync.set({ autoPaste: elements.autoPaste.checked });
+    } catch (error) {
+      console.error('Smart Copy Pro: Error saving auto paste state:', error);
+    }
   });
 
-  aiFeatures.addEventListener('change', () => {
-    chrome.storage.sync.set({ aiFeatures: aiFeatures.checked });
+  elements.aiToggle.addEventListener('change', () => {
+    try {
+      chrome.storage.sync.set({ aiFeatures: elements.aiToggle.checked });
+      elements.aiSettings.style.display = elements.aiToggle.checked ? 'block' : 'none';
+    } catch (error) {
+      console.error('Smart Copy Pro: Error saving AI features state:', error);
+    }
+  });
+
+  // Save AI settings
+  elements.summarizeToggle.addEventListener('change', () => {
+    try {
+      chrome.storage.sync.get(['aiSettings'], (items) => {
+        const settings = items.aiSettings || {};
+        settings.summarize = elements.summarizeToggle.checked;
+        chrome.storage.sync.set({ aiSettings: settings });
+      });
+    } catch (error) {
+      console.error('Smart Copy Pro: Error saving summarize setting:', error);
+    }
+  });
+
+  elements.translateToggle.addEventListener('change', () => {
+    try {
+      chrome.storage.sync.get(['aiSettings'], (items) => {
+        const settings = items.aiSettings || {};
+        settings.translate = elements.translateToggle.checked;
+        chrome.storage.sync.set({ aiSettings: settings });
+      });
+    } catch (error) {
+      console.error('Smart Copy Pro: Error saving translate setting:', error);
+    }
+  });
+
+  elements.sentimentToggle.addEventListener('change', () => {
+    try {
+      chrome.storage.sync.get(['aiSettings'], (items) => {
+        const settings = items.aiSettings || {};
+        settings.sentiment = elements.sentimentToggle.checked;
+        chrome.storage.sync.set({ aiSettings: settings });
+      });
+    } catch (error) {
+      console.error('Smart Copy Pro: Error saving sentiment setting:', error);
+    }
+  });
+
+  // Save language selection
+  elements.languageSelect.addEventListener('change', () => {
+    try {
+      chrome.storage.sync.set({ language: elements.languageSelect.value });
+    } catch (error) {
+      console.error('Smart Copy Pro: Error saving language setting:', error);
+    }
   });
 
   // Clear history
-  clearHistoryBtn.addEventListener('click', () => {
-    chrome.storage.sync.set({ history: [] }, () => {
-      updateHistoryList([]);
-    });
+  elements.clearHistoryBtn.addEventListener('click', () => {
+    try {
+      chrome.storage.sync.set({ history: [] }, () => {
+        updateHistoryList([]);
+      });
+    } catch (error) {
+      console.error('Smart Copy Pro: Error clearing history:', error);
+    }
   });
 
   // Settings button
-  settingsBtn.addEventListener('click', () => {
-    chrome.runtime.openOptionsPage();
+  elements.settingsBtn.addEventListener('click', () => {
+    try {
+      chrome.runtime.openOptionsPage();
+    } catch (error) {
+      console.error('Smart Copy Pro: Error opening options page:', error);
+    }
   });
 
   // Update history list
   function updateHistoryList(history) {
-    historyList.innerHTML = '';
-    history.slice(0, 10).forEach((item, index) => {
-      const div = document.createElement('div');
-      div.className = 'history-item';
-      div.textContent = item.text;
-      div.title = item.text;
-      div.addEventListener('click', () => {
-        navigator.clipboard.writeText(item.text);
+    try {
+      elements.historyList.innerHTML = '';
+      history.slice(0, 10).forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        
+        // Add source icon if available
+        let displayText = item.text;
+        if (item.source) {
+          const icon = getSourceIcon(item.source);
+          displayText = `${icon} ${item.text}`;
+        }
+        
+        div.innerHTML = displayText;
+        div.title = item.text;
+        
+        // Add timestamp
+        const timestamp = new Date(item.timestamp);
+        const timeStr = timestamp.toLocaleTimeString();
+        const dateStr = timestamp.toLocaleDateString();
+        
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'history-time';
+        timeDiv.textContent = `${dateStr} ${timeStr}`;
+        div.appendChild(timeDiv);
+        
+        div.addEventListener('click', () => {
+          try {
+            navigator.clipboard.writeText(item.text);
+            showCopyFeedback(div);
+          } catch (error) {
+            console.error('Smart Copy Pro: Error copying text:', error);
+          }
+        });
+        
+        elements.historyList.appendChild(div);
       });
-      historyList.appendChild(div);
-    });
+    } catch (error) {
+      console.error('Smart Copy Pro: Error updating history list:', error);
+    }
   }
 
-  // Load history
-  function loadHistory() {
-    chrome.storage.sync.get(['history'], (items) => {
-      updateHistoryList(items.history || []);
-    });
+  // Get source icon for AI features
+  function getSourceIcon(source) {
+    const icons = {
+      'Summarize': '📝',
+      'Translate': '🌐',
+      'Analyze Sentiment': '😊'
+    };
+    return icons[source] || '';
+  }
+
+  // Show copy feedback
+  function showCopyFeedback(element) {
+    try {
+      const originalText = element.textContent;
+      element.textContent = '✓ Copied!';
+      element.style.backgroundColor = '#e6f4ea';
+      
+      setTimeout(() => {
+        element.textContent = originalText;
+        element.style.backgroundColor = '';
+      }, 1000);
+    } catch (error) {
+      console.error('Smart Copy Pro: Error showing copy feedback:', error);
+    }
   }
 
   // Listen for history updates
   try {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (request.type === 'historyUpdate') {
-        loadHistory();
+        chrome.storage.sync.get(['history'], (items) => {
+          updateHistoryList(items.history);
+        });
       }
       // Always return true for async sendResponse
       return true;
     });
   } catch (error) {
-    // console.log('Smart Copy Pro: Error setting up message listener');
-    // Try to reconnect
-    connectToBackground();
+    console.error('Smart Copy Pro: Error setting up message listener:', error);
   }
 }); 

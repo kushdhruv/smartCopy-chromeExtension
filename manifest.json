@@ -1,19 +1,17 @@
 {
   "manifest_version": 3,
   "name": "Smart Copy Pro",
-  "version": "1.0.0",
-  "description": "Intelligent text copying with smart features and clipboard management",
+  "version": "1.0",
+  "description": "Enhanced clipboard management with AI features",
   "permissions": [
     "storage",
-    "clipboardRead",
     "clipboardWrite",
-    "contextMenus",
     "activeTab",
-    "scripting",
-    "commands"
+    "scripting"
   ],
   "host_permissions": [
-    "<all_urls>"
+    "https://api-inference.huggingface.co/*",
+    "https://translate.googleapis.com/*"
   ],
   "action": {
     "default_popup": "popup.html",
@@ -40,11 +38,12 @@
     "128": "icons/icon128.png"
   },
   "commands": {
-    "toggle-extension": {
+    "_execute_action": {
       "suggested_key": {
-        "default": "Ctrl+Shift+C"
+        "default": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y"
       },
-      "description": "Toggle extension on/off"
+      "description": "Open Smart Copy Pro"
     }
   },
   "options_page": "options.html"
