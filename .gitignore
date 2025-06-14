@@ -23,8 +23,11 @@ yarn-error.log*
 .env
 .env.local
 .env.*.local
+config.js
 
 # Chrome Extension specific
 *.pem
 *.crx
-*.zip 
+*.zip
+
+# Ignore .env file 
